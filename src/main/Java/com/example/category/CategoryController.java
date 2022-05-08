@@ -84,13 +84,15 @@ public class CategoryController {
 
     }
 
-    @RequestMapping(value ="/add-todo", method = RequestMethod.GET)
+    //@RequestMapping(value ="/add-todo", method = RequestMethod.GET)
+    @GetMapping(path="/add-todo")
     public String showtodopage(){
         return "catser";
     }
 
 
-    @RequestMapping(value ="/add-todo", method = RequestMethod.POST)
+    //@RequestMapping(value ="/add-todo", method = RequestMethod.POST)
+    @PostMapping(path="/add-todo")
     public String addTodo(ModelMap model, @RequestParam String catcode, @RequestParam String catdesc) throws SQLException, ClassNotFoundException {
 
 
@@ -113,7 +115,8 @@ public class CategoryController {
     }
 
 
-    @RequestMapping(value = "/update-todo", method = RequestMethod.GET)
+   // @RequestMapping(value = "/update-todo", method = RequestMethod.GET)
+    @GetMapping(path="/update-todo")
     public String showUpdateTodoPage(ModelMap model,  @RequestParam(defaultValue = "") String id) throws SQLException, ClassNotFoundException {
 
         model.put("id", id);
@@ -130,7 +133,8 @@ public class CategoryController {
         return "catedit";
     }
 
-    @RequestMapping(value = "/update-todo", method = RequestMethod.POST)
+    //@RequestMapping(value = "/update-todo", method = RequestMethod.POST)
+    @PostMapping(path="/update-todo")
     public String showUpdate(ModelMap model,  @RequestParam String catcode, @RequestParam String catdesc) throws SQLException, ClassNotFoundException {
 
         //get the old catcode
@@ -147,7 +151,9 @@ public class CategoryController {
 
 
 
-    @RequestMapping(value ="/delete-todo", method = RequestMethod.GET)
+    //@RequestMapping(value ="/delete-todo", method = RequestMethod.GET)
+
+    @GetMapping(path="/delete-todo")
     public String deleteTodo(ModelMap model, @RequestParam String id) throws SQLException, ClassNotFoundException {
 
 
@@ -159,7 +165,8 @@ public class CategoryController {
     }
 
 
-    @RequestMapping(value ="/see-todo", method = RequestMethod.GET)
+   // @RequestMapping(value ="/see-todo", method = RequestMethod.GET)
+    @GetMapping(path="/see-todo")
     public String seetodo(ModelMap model,  @RequestParam(defaultValue = "") String id) throws SQLException, ClassNotFoundException {
 
         model.put("id", id);
@@ -196,7 +203,8 @@ public class CategoryController {
     }
 
 
-    @RequestMapping(value ="/see-todo", method = RequestMethod.POST)
+   // @RequestMapping(value ="/see-todo", method = RequestMethod.POST)
+    @PostMapping(path="/see-todo")
     public String seetodo2(ModelMap model) throws SQLException, ClassNotFoundException {
 
 
