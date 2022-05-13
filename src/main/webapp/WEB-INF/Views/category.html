@@ -55,7 +55,7 @@
 
   </form>
 
-  <h1 th:text="${errorMessage}">Test</h1>
+  <h1 th:text="${errorMessage}" id="mes">Test</h1>
   <div class="container2">
     <h2>Categories</h2>
 
@@ -87,7 +87,7 @@
           <td>    <a type="button" class="btn btn-primary"
                      th:href="@{delete-todo(id=${p.catcode})}" >Delete</a> </td>
 
-          <td>    <a type="button" class="btn btn-primary" onmouseout="myFunction()"
+          <td>    <a type="button" class="btn btn-primary"    th:onmouseout="'myFunction()'"
                      th:href="@{see-todo(id=${p.catcode})}" >Items</a> </td>
 
         </tr>
@@ -100,7 +100,7 @@
 
 </div>
 
-<script>
+<script >
 
   function myFunction() {
 
