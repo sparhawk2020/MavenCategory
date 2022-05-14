@@ -5,10 +5,10 @@ public class Category {
     private String catcode;
     private String catdesc;
 
-    public Category(String catcode, String catdesc) {
-        this.catcode = catcode;
-        this.catdesc = catdesc;
-    }
+  //  public Category(String catcode, String catdesc) {
+  //      this.catcode = catcode;
+  //      this.catdesc = catdesc;
+  //  }
 
     public String getCatcode() {
         return catcode;
