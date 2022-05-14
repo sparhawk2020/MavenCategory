@@ -2,16 +2,12 @@ package com.example.category;
 
 public class Items {
 
-    public Items(String itemcode, String itemdesc) {
-        this.itemcode = itemcode;
-        this.itemdesc = itemdesc;
-    }
 
     private String itemcode;
 
     private String itemdesc;
 
-    public String getItemcode() {
+    public String getItemcode(String string) {
         return itemcode;
     }
 
@@ -19,7 +15,7 @@ public class Items {
         this.itemcode = itemcode;
     }
 
-    public String getItemdesc() {
+    public String getItemdesc(String string) {
         return itemdesc;
     }
 

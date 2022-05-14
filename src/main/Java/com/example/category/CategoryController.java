@@ -1,52 +1,36 @@
 package com.example.category;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @SessionAttributes({"id","desc","errMsg","errorMessage"})
 @RequestMapping
 @Controller
 public class CategoryController {
 
-    DatabaseService service1;
-
-    @Autowired
-    DatabaseConnection connect;
-
-
-
+     @Autowired
+     Catdao dao;
 
 
 
     @GetMapping(path="/category")
     public String showCategorypage(ModelMap model) throws ClassNotFoundException, SQLException {
 
+        List<Category> list = dao.display();
+        model.addAttribute("categorylist", list);
 
-        service1 = new DatabaseService(connect.connect());
-
-
-        List<Category> categorieslist = new ArrayList<Category>();
-
-        categorieslist = service1.display();
-
-        model.addAttribute("categorylist", categorieslist);
+        model.put("id",list.get(0).getCatcode());
 
 
-       //get the first record and diplay it
-
-
-        model.put("id",categorieslist.get(0).getCatcode());
-
-
-        model.put("desc",categorieslist.get(0).getCatdesc());
+        model.put("desc",list.get(0).getCatdesc());
 
 
         return "category";
@@ -58,76 +42,70 @@ public class CategoryController {
     @GetMapping(path="/")
     public String showCategoryPage2(ModelMap model) throws ClassNotFoundException, SQLException {
 
-        service1 = new DatabaseService(connect.connect());
+        List<Category> list = dao.display();
+        model.addAttribute("categorylist", list);
 
+        model.put("id",list.get(0).getCatcode());
 
-        List<Category> categorieslist;
-
-        categorieslist = service1.display();
-
-        categorieslist.get(0).getCatcode();
-
-        model.addAttribute("categorylist", categorieslist);
-
-
-        //get the first record and diplay it
-
-
-        model.put("id",categorieslist.get(0).getCatcode());
-
-
-        model.put("desc",categorieslist.get(0).getCatdesc());
-
+        model.put("desc",list.get(0).getCatdesc());
 
         return "category";
 
 
     }
 
-    //@RequestMapping(value ="/add-todo", method = RequestMethod.GET)
     @GetMapping(path="/add-todo")
     public String showtodopage(){
+
+
         return "catser";
     }
 
 
-    //@RequestMapping(value ="/add-todo", method = RequestMethod.POST)
+
     @PostMapping(path="/add-todo")
     public String addTodo(ModelMap model, @RequestParam String catcode, @RequestParam String catdesc) throws SQLException, ClassNotFoundException {
 
 
+        Optional<Category> x = dao.getcatbyid(catcode);
 
-
-        if (!((service1.search(catcode)) ==null)){
+        if(x.isEmpty()==false){
 
             model.put("errorMessage","Record Existing");
             return "redirect:/category";
 
+
         }
 
 
-        Category cc = new Category(catcode,catdesc);
 
-        service1.add(cc);
+         Category cc = new Category();
 
-        model.clear();
+         cc.setCatcode(catcode);
+         cc.setCatdesc(catdesc);
+
+         dao.insertData(cc);
+
+
+        model.addAttribute("cc", cc);
+
+
         return "redirect:/category";
     }
 
 
-   // @RequestMapping(value = "/update-todo", method = RequestMethod.GET)
     @GetMapping(path="/update-todo")
     public String showUpdateTodoPage(ModelMap model,  @RequestParam(defaultValue = "") String id) throws SQLException, ClassNotFoundException {
 
         model.put("id", id);
 
+        Optional<Category>  cc =  dao.getcatbyid(id);
 
-        Category cc =  service1.search(id);
 
 
-        model.put("id",cc.getCatcode());
-        model.put("desc", cc.getCatdesc());
 
+        model.put("id",cc.get().getCatcode());
+        model.put("desc", cc.get().getCatdesc());
 
 
         return "catedit";
@@ -137,13 +115,16 @@ public class CategoryController {
     @PostMapping(path="/update-todo")
     public String showUpdate(ModelMap model,  @RequestParam String catcode, @RequestParam String catdesc) throws SQLException, ClassNotFoundException {
 
-        //get the old catcode
-
         String iid = (String) model.get("id");
 
-        Category cc = new Category(catcode,catdesc);
+        Category cc = new Category();
 
-        service1.edit(cc,iid);
+        cc.setCatcode(catcode);
+        cc.setCatdesc(catdesc);
+
+        dao.EditData(cc, iid);
+
+
 
         return "redirect:/";
 
@@ -157,45 +138,35 @@ public class CategoryController {
     public String deleteTodo(ModelMap model, @RequestParam String id) throws SQLException, ClassNotFoundException {
 
 
-        service1.delete(id);
 
+        dao.deleteData(id);
 
         model.clear();
         return "redirect:/";
     }
 
 
-   // @RequestMapping(value ="/see-todo", method = RequestMethod.GET)
+
     @GetMapping(path="/see-todo")
     public String seetodo(ModelMap model,  @RequestParam(defaultValue = "") String id) throws SQLException, ClassNotFoundException {
 
-        model.put("id", id);
-
-        service1 = new DatabaseService(connect.connect());
-
-        String iid = (String) model.get("id");
-
-        List<Items> Itemlist;
-
-        Itemlist = service1.display2(iid);
 
 
-        if(Itemlist.size()==0){
 
-            model.put("errorMessage","There are not items for this category ");
-            return "redirect:/";
-        } else {
-            model.put("errorMessage"," ");
+
+        List<Map<String, Object>> x= dao.getitem(id);
+
+        if(x.size()==0){
+
+            model.put("errorMessage","No items in this category ");
+            return "redirect:/category";
+
+
         }
 
-        model.put("desc",iid);
 
 
-        List<Items> itemlist;
-
-        itemlist= service1.display2(iid);
-
-        model.addAttribute("itemlist", itemlist);
+        model.addAttribute("itemlist", x);
 
 
 
@@ -203,7 +174,6 @@ public class CategoryController {
     }
 
 
-   // @RequestMapping(value ="/see-todo", method = RequestMethod.POST)
     @PostMapping(path="/see-todo")
     public String seetodo2(ModelMap model) throws SQLException, ClassNotFoundException {
 
