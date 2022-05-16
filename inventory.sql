@@ -27,9 +27,11 @@ SET time_zone = "+00:00";
 -- Table structure for table `category`
 --
 
-use heroku_6e2dac38cfc86ba;
+use heroku_04ce7fb4397564d;
 
-drop table if exists `category`;
+
+
+--drop table if exists `category`;
 
 CREATE TABLE `category` (
   `catcode` varchar(5) NOT NULL,

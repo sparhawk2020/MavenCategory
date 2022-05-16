@@ -1,6 +1,7 @@
 package com.example.category;
 
 
+import groovy.transform.Final;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -67,7 +68,19 @@ public class CategoryController {
     public String addTodo(ModelMap model, @RequestParam String catcode, @RequestParam String catdesc) throws SQLException, ClassNotFoundException {
 
 
-        Optional<Category> x = dao.getcatbyid(catcode);
+       // Optional<Category> x = dao.getcatbyid(catcode);
+
+
+        List<Map<String, Object>> x = dao.getcat(catcode);
+        String iid1, ccdesc1;
+
+        x.forEach(rowMap ->{
+            String iid =(String) rowMap.get("catcode");
+            model.put("id",iid);
+            String ccdesc = (String) rowMap.get("catdesc");
+            model.put("desc", ccdesc);
+
+        });
 
         if(x.isEmpty()==false){
 
@@ -99,13 +112,28 @@ public class CategoryController {
 
         model.put("id", id);
 
-        Optional<Category>  cc =  dao.getcatbyid(id);
+       // Optional<Category>  cc =  dao.getcatbyid(id);
+
+        List<Map<String, Object>> x = dao.getcat(id);
+        String iid1, ccdesc1;
+
+        x.forEach(rowMap ->{
+             String iid =(String) rowMap.get("catcode");
+             model.put("id",iid);
+             String ccdesc = (String) rowMap.get("catdesc");
+             model.put("desc", ccdesc);
+
+        });
 
 
 
 
-        model.put("id",cc.get().getCatcode());
-        model.put("desc", cc.get().getCatdesc());
+
+
+
+
+       // model.put("id",cc.get().getCatcode());
+       // model.put("desc", cc.get().getCatdesc());
 
 
         return "catedit";
